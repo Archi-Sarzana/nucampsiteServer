@@ -1,7 +1,6 @@
-
-
 const express = require("express");
 const bodyParser = require("body-parser");
+const authenticate = require("../authenticate");
 
 const promotionRouter = express.Router();
 
@@ -18,7 +17,7 @@ promotionRouter
   .get((req, res) => {
     res.end("Will send all the promotions to you");
   })
-  .post((req, res) => {
+  .post(authenticate.verifyAdmin,(req, res) => {
     res.end(
       `Will add the promotion: ${req.body.name} with description: ${req.body.description}`
     );
@@ -27,7 +26,7 @@ promotionRouter
     res.statusCode = 403;
     res.end("PUT operation not supported on /promotions");
   })
-  .delete((req, res) => {
+  .delete(authenticate.verifyAdmin,(req, res) => {
     res.end("Deleting all promotions");
   });
 
@@ -49,12 +48,12 @@ promotionRouter
       `POST operation not supported on /promotionId/${req.params.promotionId}`
     );
   })
-  .put((req, res) => {
+  .put(authenticate.verifyAdmin,(req, res) => {
     res.write(`Updating the promotion: ${req.params.promotionId}\n`);
     res.end(`Will update the promotion: ${req.body.name}
         with description: ${req.body.description}`);
   })
-  .delete((req, res) => {
+  .delete(authenticate.verifyAdmin,(req, res) => {
     res.end(`Deleting promotion: ${req.params.promotionId}`);
   });
 
